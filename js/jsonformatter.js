@@ -57,9 +57,12 @@ p.process = function(json) {
   var json = json || this.json;
   try {
     if (json == "") json = "\"\"";
+    if(typeof json == 'string'){
+      json = eval("[" + json + "]");
+      json = json[0];
+    }
     this.json = json;
-    var obj = eval("[" + json + "]");
-    html = this.processObject(obj[0], 0, false, false, false);
+    html = this.processObject(json, 0, false, false, false);
     this.canvas.innerHTML = "<pre class='CodeContainer'>" + html + "</pre>";
   } catch (e) {
     alert("JSON数据格式不正确:\n" + e.message);
@@ -220,7 +223,7 @@ p.collapseLevel = function (level) {
 }
 
 p.ensureIsPopulated = function () {
-  if (!this.canvas.innerHTML && !!get_dom("RawJson").value) {
+  if (!this.canvas.innerHTML && !!this.json) {
         Process();
     }
 }
